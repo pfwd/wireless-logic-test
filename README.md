@@ -1,14 +1,17 @@
 # Wireless Logic Test
 
+## Requirements
+- Make. If you don't have `Make` please see the `Makefile` to run the commands.
+ 
 ## Install
 
-Build the containers
+To build the containers run:
 
 ```bash
 make install
 ```
 
-Please note that you may need to wait until the docker entry points are completed.
+Please note that you may need to wait until the Docker entry points are completed as they install Composer packages.
 
 Check the logs to be sure that the containers are fully booted. 
 
@@ -18,16 +21,22 @@ You should a similar message to the following in the logs:
 ```
 To check the logs run the following
 
+For the API container
+
 ```bash
 make api-logs
 ```
+
+For the console container
 
 ```bash
 make console-logs
 ```
 
+These commands follow the logs so use CTRL+C to exit the output
+
 ## Testing
-The PHP containers can run the following tests
+The PHP containers run the following tests
 - PHP_CodeSniffer
 - PHPStan (Max)
 - PHPUnit
@@ -86,3 +95,15 @@ Now access [http://pf-php-wireless-logic-test.local](http://pf-php-wireless-logi
 
 To access the products go to [http://pf-php-wireless-logic-test.local/product](http://pf-php-wireless-logic-test.local/product)
 
+## FAQ
+
+### Where is the data stored?
+
+The data is stored in SQLite and shared across both the php-console and php-api containers via a Docker volume. 
+See `docker-compose` for more details.
+
+### Why are there some many nested folders?
+
+This is a mono-repo which currently contains the PHP apps. 
+
+The folder structure allows for other apps built using Java or Python or another programming language. These apps (micro-services) could share data and proxy webserver.
