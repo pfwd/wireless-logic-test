@@ -3,6 +3,8 @@ FROM php:8.2-apache-buster as  php-base
 LABEL maintainer="Peter Fisher"
 
 ARG XDEBUG_MODE="debug"
+ENV XDEBUG_MODE=$XDEBUG_MODE
+
 ARG APP_ENV="test"
 ENV APP_ENV=$APP_ENV
 
@@ -20,18 +22,10 @@ COPY ./infra/scripts/install_php.sh /tmp/
 RUN chmod u+x /tmp/install_php.sh && /tmp/install_php.sh
 
 FROM composer/composer:2.5.2 as package-builder
-WORKDIR /app
-ARG APP_ENV
-COPY ./app/composer.json .
-COPY ./app/composer.lock .
-
-COPY ./infra/scripts/install_composer_packages.sh /tmp/
-RUN chmod u+x /tmp/install_composer_packages.sh && /tmp/install_composer_packages.sh
 
 FROM php-base as app
 WORKDIR /var/www/html
 COPY --from=package-builder /usr/bin/composer /usr/bin/composer
-COPY --chown=www-data:www-data --from=package-builder /app/vendor ./vendor
 COPY --chown=www-data:www-data  ./app .
 
 COPY ./infra/scripts/docker_entry_point.sh /

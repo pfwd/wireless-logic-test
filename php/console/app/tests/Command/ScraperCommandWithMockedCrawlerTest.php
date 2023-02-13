@@ -9,8 +9,9 @@ use Console\App\Formatter\PriceFormatter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DomCrawler\Crawler;
 
-class ScraperCommandTest extends TestCase
+class ScraperCommandWithMockedCrawlerTest extends TestCase
 {
     /** @var CommandTester */
     private CommandTester $commandTester;
@@ -20,9 +21,7 @@ class ScraperCommandTest extends TestCase
         $this->commandTester->execute([]);
 
         $display = trim($this->commandTester->getDisplay());
-        $this->assertStringContainsString('Resetting up database', $display);
-        $this->assertStringContainsString('Crawling site', $display);
-        $this->assertStringContainsString('Done', $display);
+        $this->assertStringContainsString('Saving data:', $display);
     }
 
 
@@ -31,6 +30,13 @@ class ScraperCommandTest extends TestCase
     {
         $priceFormatterMock = $this->createMock(PriceFormatter::class);
         $crawlerMock = $this->createMock(DOMCrawler::class);
+
+        $fullPage = file_get_contents(__DIR__ .'/../fixtures/full_page.html');
+
+        $crawler = new Crawler($fullPage);
+
+        $crawlerMock->expects(self::once())->method('getDocumentCrawler')->willReturn($crawler);
+
         $productModelMock = $this->createMock(Product::class);
 
         $application = new Application();

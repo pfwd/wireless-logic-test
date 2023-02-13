@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Console\App\Command\ScraperCommand;
+use Console\App\Crawler\DomCrawler;
+use Console\App\DataStore\Product;
+use Console\App\Formatter\PriceFormatter;
+use Symfony\Component\Console\Application;
+
+$app = new Application();
+
+$priceFormatter = new PriceFormatter();
+$crawler = new DomCrawler();
+$productDataStore = new Product('');
+$app->add(new ScraperCommand($priceFormatter, $crawler, $productDataStore));
+$app->run();

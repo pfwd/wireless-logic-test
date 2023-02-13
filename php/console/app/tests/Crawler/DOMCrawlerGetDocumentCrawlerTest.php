@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-use Console\App\Crawler\DomCrawler;
+use Console\App\Crawler\DOMCrawler;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
-final class DOMCrawlerTest extends TestCase
+final class DOMCrawlerGetDocumentCrawlerTest extends TestCase
 {
 
     public static function dataProvider(): array
@@ -11,15 +12,12 @@ final class DOMCrawlerTest extends TestCase
         return [
             [
                 'http://google.com',
-                '</html>'
             ],
             [
                 'https://wltest.dns-systems.net/',
-                '</html>'
             ],
             [
                 'http://domain-does-not-exist',
-                ''
             ],
         ];
     }
@@ -28,15 +26,14 @@ final class DOMCrawlerTest extends TestCase
      * @dataProvider dataProvider
      *
      * @param $input
-     * @param $expected
      *
      * @return void
      */
-    public function testLoadDocument($input, $expected): void
+    public function testGetDocumentCrawler($input): void
     {
-        $crawler = new DomCrawler();
-        $result = $crawler->loadDocument($input);
+        $crawler = new DOMCrawler();
+        $result = $crawler->getDocumentCrawler($input);
 
-        self::assertStringContainsString($expected, $result);
+        self::assertInstanceOf(Crawler::class, $result);
     }
 }

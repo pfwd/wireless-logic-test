@@ -1,42 +1,48 @@
 <?php declare(strict_types=1);
 
-use Console\App\Crawler\DomCrawler;
+use Console\App\Crawler\DOMCrawler;
 use PHPUnit\Framework\TestCase;
 
-final class DOMCrawlerLoadDocumentTest extends TestCase
+final class DOMCrawlerTextFromNodeTest extends TestCase
 {
 
     public static function dataProvider(): array
     {
+
         return [
             [
-                'http://google.com',
-                '</html>'
+                '<div class="header dark-bg"><h3>Optimum: 24GB Data - 1 Year</h3></div>',
+                'h3',
+                'Optimum: 24GB Data - 1 Year'
             ],
             [
-                'https://wltest.dns-systems.net/',
-                '</html>'
+                '<li><div class="package-name">The basic starter subscription providing you with all you need to get your device up and running with inclusive Data and SMS services.</div></li>',
+                '.package-name',
+                'The basic starter subscription providing you with all you need to get your device up and running with inclusive Data and SMS services.'
             ],
             [
-                'http://domain-does-not-exist',
-                ''
+                '<li><div class="package-price"><span class="price-big">£5.99</span><br>(inc. VAT)<br>Per Month</div></li>',
+                '.price-big',
+                '£5.99'
             ],
         ];
     }
 
+
     /**
      * @dataProvider dataProvider
      *
-     * @param $input
+     * @param $fixture
+     * @param $selector
      * @param $expected
-     *
      * @return void
      */
-    public function testLoadDocument($input, $expected): void
+    public function testLoadDocument($fixture, $selector, $expected): void
     {
-        $crawler = new DomCrawler();
-        $result = $crawler->loadDocument($input);
+        $domCrawler = new DOMCrawler();
+        $crawler = $domCrawler->getCrawler($fixture);
+        $result = $domCrawler->getTextFromNode($crawler, $selector);
 
-        self::assertStringContainsString($expected, $result);
+        self::assertSame($result, $expected);
     }
 }

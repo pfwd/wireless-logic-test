@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-use Console\App\Crawler\DomCrawler;
+use Console\App\Crawler\DOMCrawler;
 use PHPUnit\Framework\TestCase;
 
-final class DOMCrawlerTest extends TestCase
+final class DOMCrawlerLoadDocumentTest extends TestCase
 {
 
     public static function dataProvider(): array
@@ -34,7 +34,7 @@ final class DOMCrawlerTest extends TestCase
      */
     public function testLoadDocument($input, $expected): void
     {
-        $crawler = new DomCrawler();
+        $crawler = new DOMCrawler();
         $result = $crawler->loadDocument($input);
 
         self::assertStringContainsString($expected, $result);
