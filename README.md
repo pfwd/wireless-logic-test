@@ -102,7 +102,7 @@ To access the products go to [http://pf-php-wireless-logic-test.local/product](h
 The data is stored in SQLite and shared across both the php-console and php-api containers via a Docker volume. 
 See `docker-compose` for more details.
 
-### Why are there some many nested folders?
+### Why are there so many nested folders?
 
 This is a mono-repo which currently contains the PHP apps. 
 
