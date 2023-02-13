@@ -57,7 +57,7 @@ make test-api
 ```
 
 # Scraping the website
-To scrap the website and build the database run the following.  
+To scrape the website and build the database run the following.  
 
 This will reset the database and reload the data from the scraped site.
 
