@@ -1,0 +1,65 @@
+version: '3.4'
+
+networks:
+  wireless-logic:
+
+volumes:
+  php_api_logs:
+  php_api_cache:
+  php_console_logs:
+  php_console_cache:
+  db_store:
+
+services:
+
+  proxy:
+    build:
+      context: ./webserver
+      dockerfile: ./infra/Dockerfile
+    restart: always
+    container_name: webserver
+    networks:
+      - wireless-logic
+    ports:
+      - "80:80"
+
+  php-api:
+    build:
+      context: ./php/api
+      dockerfile: ./infra/Dockerfile
+      args:
+        - XDEBUG_MODE=coverage
+        - APP_ENV=dev
+    restart: always
+    container_name: php-api
+    volumes:
+      - php_api_cache:/var/www/html/var/cache:Z
+      - php_api_logs:/var/www/html/var/log:Z
+      - db_store:/var/www/html/var/db_store:Z
+      - ./php/api/app:/var/www/html
+    networks:
+      - wireless-logic
+    expose:
+      - "80"
+      - "9003"
+    depends_on:
+      -  proxy
+    working_dir: /var/www/html
+
+  php-console:
+    build:
+      context: ./php/console
+      dockerfile: ./infra/Dockerfile
+      args:
+        - XDEBUG_MODE=coverage
+        - APP_ENV=dev
+    restart: always
+    container_name: php-console
+    volumes:
+      - php_console_cache:/var/www/html/var/cache:Z
+      - php_console_logs:/var/www/html/var/log:Z
+      - db_store:/var/www/html/var/db_store:Z
+      - ./php/console/app:/var/www/html
+    networks:
+      - wireless-logic
+    working_dir: /var/www/html

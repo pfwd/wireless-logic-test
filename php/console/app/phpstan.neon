@@ -1,0 +1,11 @@
+parameters:
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    level: 8
+    paths:
+        -  %currentWorkingDirectory%/src
+    inferPrivatePropertyTypeFromConstructor: true
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    excludePaths:
+        - %currentWorkingDirectory%/src/Migrations/*
