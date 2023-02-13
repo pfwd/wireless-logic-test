@@ -7,3 +7,6 @@ else
   printf "XDEBUG_MODE = $XDEBUG_MODE Installing \n"
   pecl install xdebug-3.2.0 && docker-php-ext-enable xdebug
 fi
+
+# Enable apache modules
+a2enmod rewrite
